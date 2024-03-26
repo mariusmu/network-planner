@@ -1,0 +1,44 @@
+{
+  "name": "network-planner",
+  "version": "0.0.1",
+  "description": "Network planner with Graphics",
+  "scripts": {
+    "lint": "elint --project tsconfig.json --type-check",
+    "watch": "parcel serve index.html",
+    "build": "parcel build index.html",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/mariusmu/network-planner"
+  },
+  "keywords": [
+    "network",
+    "planner"
+  ],
+  "author": "Marius Munthe-Kaas",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "29.5.8",
+    "eslint": "8.57.0",
+    "jest": "29.7.0",
+    "parcel": "2.12.0",
+    "process": "^0.11.10",
+    "typescript": "5.4.3",
+    "typescript-eslint": "7.4.0"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@reduxjs/toolkit": "^2.2.2",
+    "framer-motion": "^11.0.20",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.51.1",
+    "react-redux": "^9.1.0",
+    "short-uuid": "^4.2.2"
+  }
+}
