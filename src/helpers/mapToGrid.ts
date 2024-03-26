@@ -1,4 +1,4 @@
-import { GridRow } from '../components/NetTable/NetTable'
+import { GridEntry, GridHeader, GridRow } from '../components/NetTable/NetTable'
 import { Hostname } from '../models/hostname'
 
 export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
@@ -11,7 +11,6 @@ export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
     { name: 'Groups' },
     { name: 'Description' }
   ]
-  let iterator = 1
 
   const values: GridRow[] = hostnames.map(h => {
     return {
@@ -19,10 +18,13 @@ export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
       items: [
         { field: 'hostname', value: h.hostname },
         { field: 'ipAddress', value: h.ipAddress },
-        { field: 'environment', value: h.environment },
+        {
+          field: 'environment',
+          value: h.environment.map(e => e.value).join(',')
+        },
         {
           field: 'groups',
-          value: h.groups.map(g => g.name).join(', '),
+          value: h.groups.map(g => g.value).join(', '),
           multitem: true
         },
         { field: 'description', value: h.description }

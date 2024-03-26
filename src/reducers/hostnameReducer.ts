@@ -15,7 +15,8 @@ export const hostnameSlice = createSlice({
   initialState,
   reducers: {
     add: (state: HostnameList, action: PayloadAction<Hostname>) => {
-      state.hostnames = Object.assign(state.hostnames.concat(action.payload))
+      const found = state.hostnames.filter(s => s.id !== action.payload.id)
+      state.hostnames = Object.assign(found.concat(action.payload))
     },
     remove: (state: HostnameList, action: PayloadAction<string>) => {
       const found = state.hostnames.filter(s => s.id !== action.payload)

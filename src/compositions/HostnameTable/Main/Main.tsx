@@ -20,7 +20,7 @@ import HostnameTable from '../HostnameTable'
 
 export default function Main ({}) {
   return (
-    <Container maxW='1000px'>
+    <Container maxW='1400px'>
       <Tabs isFitted={true} variant='soft-rounded'>
         <TabList>
           <Tab>

@@ -34,32 +34,15 @@ export interface GridEntry {
 }
 
 export type RemoveAction = (id: string) => void
+export type EditAction = (id: string, copy: boolean) => void
 
 export default function NetTable (props: {
   data: GridEntry
   removeAction: RemoveAction
+  editAction: EditAction
 }) {
-  //   const [array, setArray] = useState(entry)
-  //   const [direction, setDirection] = useState(1)
-  //   const [sortKey, setSortKey] = useState('')
-  //   function Sort (a: GridRow, b: Hostname, key: string) {
-  //     const lastDirection = direction
-  //     let newDirection = lastDirection
-  //     // if (key === sortKey) {
-  //     newDirection = lastDirection * -1
-  //     console.log(newDirection, lastDirection)
-  //     setDirection(newDirection)
-
-  //     setSortKey(key)
-  //     return a[key] > b[key] ? newDirection : lastDirection
-  //   }
-
-  //   function SortArray (key: string) {
-  //     setArray(array.sort((a, b) => Sort(a, b, key)))
-  //   }
-
   return (
-    <Container maxW='1000px' paddingTop='20px'>
+    <Container maxW='1300px' paddingTop='20px'>
       <TableContainer>
         <Table size='sm'>
           <Thead>
@@ -85,8 +68,22 @@ export default function NetTable (props: {
                   )
                 })}
                 <Td>
-                  <Button size='sm' onClick={() => props.removeAction(row.id)}>
+                  <Button size='xs' onClick={() => props.removeAction(row.id)}>
                     Delete
+                  </Button>
+                  &nbsp;&nbsp;
+                  <Button
+                    size='xs'
+                    onClick={() => props.editAction(row.id, false)}
+                  >
+                    Edit
+                  </Button>
+                  &nbsp;&nbsp;
+                  <Button
+                    size='xs'
+                    onClick={() => props.editAction(row.id, true)}
+                  >
+                    Copy
                   </Button>
                 </Td>
               </Tr>

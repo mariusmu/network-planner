@@ -1,92 +1,133 @@
-import {
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon
-} from '@chakra-ui/input'
+import { Input } from '@chakra-ui/input'
 import { Stack } from '@chakra-ui/layout'
-import { Button } from '@chakra-ui/react'
+import { Button, FormControl, FormErrorMessage } from '@chakra-ui/react'
 import React from 'react'
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Hostname } from '../../models/hostname'
-import shortUuid from 'short-uuid'
+import { useForm, Controller } from 'react-hook-form'
+import { MultiSelect } from 'chakra-multiselect'
 import { add } from '../../reducers/hostnameReducer'
+import shortUUID from 'short-uuid'
 
-export default function HostnameInput () {
-  const [hostname, setHostname] = useState({ value: 'marius', valid: true })
-  const [ipAddress, setIpAddress] = useState({
-    value: '192.168.10.2',
-    valid: true
-  })
-  const [environment, setEnvironment] = useState('Preprod')
-  const [groups, setGroups] = useState<string>('Test,Web')
-  const [description, setDescription] = useState('My server')
+export default function HostnameInput (props: {
+  entityToEdit: Hostname
+  closeAction: () => void
+}) {
   const dispatch = useDispatch()
-  function submit () {
-    const item: Hostname = {
-      description: description,
-      environment: environment,
-      groups: groups.split(',').map(s => {
-        return {
-          name: s,
-          id: shortUuid.generate()
-        }
-      }),
-      hostname: hostname,
-      id: shortUuid().generate(),
-      ipAddress: ipAddress
+  const { register, handleSubmit, formState, control } = useForm<Hostname>({
+    defaultValues: {
+      description: props.entityToEdit?.description ?? '',
+      environment: props.entityToEdit?.environment ?? '',
+      groups: props.entityToEdit?.groups ?? [],
+      hostname: props.entityToEdit?.hostname ?? '',
+      ipAddress: props.entityToEdit?.ipAddress ?? ''
     }
-    console.log(item)
+  })
+
+  function submit (values) {
+    const item: Hostname = {
+      hostname: values.hostname,
+      description: values.description,
+      environment: values.environment,
+      groups: values.groups,
+      id: props.entityToEdit?.id ?? shortUUID().generate(),
+      ipAddress: values.ipAddress
+    }
     dispatch(add(item))
+    props.closeAction()
   }
+  const options = [
+    { label: 'Production', value: 'production' },
+    { label: 'Pre-Production', value: 'pre-production' },
+    { label: 'Test', value: 'test', disabled: false },
+    { label: 'Development', value: 'dev' }
+  ]
 
   return (
     <Stack padding='20px' spacing={3}>
-      <InputGroup>
-        <InputLeftAddon>Hostname</InputLeftAddon>
-        <Input
-          value={hostname}
-          onChange={ev => setHostname(ev.target.value)}
-          placeholder='Valid hostname'
-        />
-      </InputGroup>
-
-      <InputGroup>
-        <InputLeftAddon>IP address</InputLeftAddon>
-        <Input
-          placeholder='Valid IP'
-          value={ipAddress}
-          onChange={ev => setIpAddress(ev.target.value)}
-        />
-      </InputGroup>
-      <InputGroup>
-        <InputLeftAddon>Environment</InputLeftAddon>
-        <Input
-          placeholder='Environment'
-          value={environment}
-          onChange={ev => setEnvironment(ev.target.value)}
-        />
-      </InputGroup>
-      <InputGroup>
-        <InputLeftAddon>Groups</InputLeftAddon>
-        <Input
-          placeholder='Groups'
-          value={groups}
-          onChange={ev => setGroups(ev.target.value)}
-        />
-      </InputGroup>
-      <InputGroup>
-        <InputLeftAddon>Description</InputLeftAddon>
-        <Input
-          placeholder='Description'
-          value={description}
-          onChange={ev => setDescription(ev.target.value)}
-        />
-      </InputGroup>
-      <Button size='sm' onClick={() => submit()}>
-        Submit
-      </Button>
+      <form onSubmit={handleSubmit(submit)}>
+        <FormControl
+          isInvalid={formState.errors.hostname !== undefined}
+          paddingBottom='10px'
+        >
+          <Input
+            padding='20px'
+            placeholder='Valid hostname'
+            {...register('hostname', { required: true, minLength: 4 })}
+          />
+          <FormErrorMessage>
+            {formState.errors.hostname && formState.errors.hostname.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl
+          isInvalid={formState.errors.ipAddress !== undefined}
+          paddingBottom='10px'
+        >
+          <Input placeholder='Valid IP' {...register('ipAddress')} />
+          <FormErrorMessage>
+            {formState.errors.ipAddress && formState.errors.ipAddress.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl
+          isInvalid={formState.errors.environment !== undefined}
+          paddingBottom='10px'
+        >
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <MultiSelect
+                options={options}
+                value={value ? value : []}
+                onChange={onChange}
+                labelledBy='Select'
+                disableSearch
+                placeholder='Environments'
+                hasSelectAll={false}
+                create
+              />
+            )}
+            name='environment'
+          />
+        </FormControl>
+        <FormControl
+          isInvalid={formState.errors.groups !== undefined}
+          paddingBottom='10px'
+        >
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <MultiSelect
+                options={options}
+                value={value ? value : []}
+                onChange={onChange}
+                labelledBy='Select'
+                disableSearch
+                placeholder='Groups'
+                hasSelectAll={false}
+              />
+            )}
+            name='groups'
+          />
+        </FormControl>
+        <FormControl
+          isInvalid={formState.errors.description !== undefined}
+          paddingBottom='10px'
+        >
+          <Input placeholder='Description' {...register('description')} />
+          <FormErrorMessage>
+            {formState.errors.description &&
+              formState.errors.description.message}
+          </FormErrorMessage>
+        </FormControl>
+        <Button
+          colorScheme='teal'
+          isLoading={formState.isLoading}
+          size='sm'
+          type='submit'
+        >
+          Submit
+        </Button>
+      </form>
     </Stack>
   )
 }
