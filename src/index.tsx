@@ -1,19 +1,19 @@
+import { MultiSelectTheme } from 'chakra-multiselect'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 
 import {
   ChakraProvider,
   ColorModeProvider,
   extendTheme
 } from '@chakra-ui/react'
-
-import { theme as chakraTheme } from '@chakra-ui/react'
-import Main from './compositions/HostnameTable/Main/Main'
-
 import { configureStore } from '@reduxjs/toolkit'
-import { Provider } from 'react-redux'
+
+import Main from './compositions/HostnameTable/Main/Main'
+import environmentSlice from './reducers/environmentReducer'
 import hostnameSlice from './reducers/hostnameReducer'
-import { MultiSelectTheme } from 'chakra-multiselect'
+import portSlice from './reducers/portReducer'
 
 let persistedStore = localStorage.getItem('store')
 if (persistedStore !== null) {
@@ -22,7 +22,9 @@ if (persistedStore !== null) {
 
 export const store = configureStore({
   reducer: {
-    hostnameSlice
+    hostnameSlice,
+    portSlice,
+    environmentSlice
   },
   preloadedState: persistedStore ?? {}
 })

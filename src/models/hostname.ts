@@ -1,10 +1,5 @@
 import { Option } from 'react-multi-select-component'
 
-export interface Group {
-  name: string
-  id: string
-}
-
 export interface Hostname {
   id: string
   hostname: string

@@ -2,18 +2,23 @@ import { Input } from '@chakra-ui/input'
 import { Stack } from '@chakra-ui/layout'
 import { Button, FormControl, FormErrorMessage } from '@chakra-ui/react'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Hostname } from '../../models/hostname'
 import { useForm, Controller } from 'react-hook-form'
 import { MultiSelect } from 'chakra-multiselect'
 import { add } from '../../reducers/hostnameReducer'
 import shortUUID from 'short-uuid'
+import { RootState } from '../..'
 
 export default function HostnameInput (props: {
   entityToEdit: Hostname
   closeAction: () => void
 }) {
   const dispatch = useDispatch()
+  const environments = useSelector(
+    (state: RootState) => state.environmentSlice.environments
+  )
+
   const { register, handleSubmit, formState, control } = useForm<Hostname>({
     defaultValues: {
       description: props.entityToEdit?.description ?? '',
@@ -36,12 +41,9 @@ export default function HostnameInput (props: {
     dispatch(add(item))
     props.closeAction()
   }
-  const options = [
-    { label: 'Production', value: 'production' },
-    { label: 'Pre-Production', value: 'pre-production' },
-    { label: 'Test', value: 'test', disabled: false },
-    { label: 'Development', value: 'dev' }
-  ]
+  const options = environments.map(e => {
+    return { label: e.name, value: e.name }
+  })
 
   return (
     <Stack padding='20px' spacing={3}>

@@ -13,10 +13,14 @@ import {
 import {
   faNetworkWired,
   faServer,
-  faShieldHalved
+  faShieldHalved,
+  faArrowUpRightDots,
+  faEthernet
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import HostnameTable from '../HostnameTable'
+import PortTable from '../../PortTable/PortTable'
+import EnvironmentTable from '../../EnvironmentTable/EnvironmentTable'
 
 export default function Main ({}) {
   return (
@@ -27,6 +31,15 @@ export default function Main ({}) {
             <FontAwesomeIcon icon={faNetworkWired} className='icon' />
             Hostnames
           </Tab>
+          <Tab>
+            <FontAwesomeIcon icon={faArrowUpRightDots} className='icon' />
+            Environments
+          </Tab>
+          <Tab>
+            <FontAwesomeIcon icon={faEthernet} className='icon' />
+            Ports
+          </Tab>
+
           <Tab>
             <FontAwesomeIcon icon={faServer} className='icon' />
             Groups
@@ -40,8 +53,12 @@ export default function Main ({}) {
           <TabPanel>
             <HostnameTable />
           </TabPanel>
-          <TabPanel>2</TabPanel>
-          <TabPanel>3</TabPanel>
+          <TabPanel>
+            <EnvironmentTable />
+          </TabPanel>
+          <TabPanel>
+            <PortTable />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Container>
