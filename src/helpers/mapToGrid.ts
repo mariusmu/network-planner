@@ -2,6 +2,7 @@ import { GridEntry, GridHeader, GridRow } from '../components/NetTable/NetTable'
 import { Hostname } from '../models/hostname'
 import { Environment } from '../reducers/environmentReducer'
 import { Port } from '../reducers/portReducer'
+import { FirewallEntry } from '../reducers/firewallReducer'
 
 export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
   const gridHeader: GridHeader[] = [
@@ -22,7 +23,8 @@ export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
         { field: 'ipAddress', value: h.ipAddress },
         {
           field: 'environment',
-          value: h.environment.map(e => e.value).join(',')
+          value: h.environment.map(e => e.value).join(', '),
+          multitem: true
         },
         {
           field: 'groups',
@@ -89,6 +91,62 @@ export function mapEnvironmentsToGrid (environment: Environment[]): GridEntry {
       ]
     }
   })
+  return {
+    headers: gridHeader,
+    items: values
+  }
+}
+
+export function mapFirewallEntryToGrid (entries?: FirewallEntry[]): GridEntry {
+  const gridHeader: GridHeader[] = [
+    {
+      name: 'Source FQDN'
+    },
+    {
+      name: 'Source CIDR'
+    },
+    {
+      name: 'Destination FQDN'
+    },
+    {
+      name: 'Destination CIDR'
+    },
+    {
+      name: 'Destination port'
+    },
+    { name: 'Description' }
+  ]
+
+  const values: GridRow[] =
+    entries?.map(h => {
+      return {
+        id: h.id,
+        items: [
+          {
+            field: 'destinationFQDN',
+            value: h.source.hostname
+          },
+          {
+            field: 'sourceCIDR',
+            value: h.source.ipAddress
+          },
+          {
+            field: 'destinationFQDN',
+            value: h.destination.hostname
+          },
+          {
+            field: 'destinationCIDR',
+            value: h.destination.ipAddress
+          },
+          {
+            field: 'destinationPort',
+            value: h.destinationPorts.join(', '),
+            multitem: true
+          },
+          { field: 'description', value: h.description }
+        ]
+      }
+    }) ?? []
   return {
     headers: gridHeader,
     items: values

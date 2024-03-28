@@ -18,9 +18,10 @@ import {
   faEthernet
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import HostnameTable from '../HostnameTable'
-import PortTable from '../../PortTable/PortTable'
-import EnvironmentTable from '../../EnvironmentTable/EnvironmentTable'
+import HostnameTable from '../HostnameTable/HostnameTable'
+import PortTable from '../PortTable/PortTable'
+import EnvironmentTable from '../EnvironmentTable/EnvironmentTable'
+import FirewallTable from '../FirewallTable/FIrewallTable'
 
 export default function Main ({}) {
   return (
@@ -58,6 +59,10 @@ export default function Main ({}) {
           </TabPanel>
           <TabPanel>
             <PortTable />
+          </TabPanel>
+          <TabPanel></TabPanel>
+          <TabPanel>
+            <FirewallTable />
           </TabPanel>
         </TabPanels>
       </Tabs>

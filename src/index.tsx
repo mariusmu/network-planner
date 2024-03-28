@@ -10,10 +10,11 @@ import {
 } from '@chakra-ui/react'
 import { configureStore } from '@reduxjs/toolkit'
 
-import Main from './compositions/HostnameTable/Main/Main'
+import Main from './compositions/Main/Main'
 import environmentSlice from './reducers/environmentReducer'
 import hostnameSlice from './reducers/hostnameReducer'
 import portSlice from './reducers/portReducer'
+import firewallSlice from './reducers/firewallReducer'
 
 let persistedStore = localStorage.getItem('store')
 if (persistedStore !== null) {
@@ -24,7 +25,8 @@ export const store = configureStore({
   reducer: {
     hostnameSlice,
     portSlice,
-    environmentSlice
+    environmentSlice,
+    firewallSlice
   },
   preloadedState: persistedStore ?? {}
 })

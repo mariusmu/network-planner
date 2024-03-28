@@ -1,14 +1,16 @@
+import { MultiSelect } from 'chakra-multiselect'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import shortUUID from 'short-uuid'
+
 import { Input } from '@chakra-ui/input'
 import { Stack } from '@chakra-ui/layout'
 import { Button, FormControl, FormErrorMessage } from '@chakra-ui/react'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Hostname } from '../../models/hostname'
-import { useForm, Controller } from 'react-hook-form'
-import { MultiSelect } from 'chakra-multiselect'
-import { add } from '../../reducers/hostnameReducer'
-import shortUUID from 'short-uuid'
+import * as _ from 'lodash'
 import { RootState } from '../..'
+import { Hostname } from '../../models/hostname'
+import { add } from '../../reducers/hostnameReducer'
 
 export default function HostnameInput (props: {
   entityToEdit: Hostname
@@ -17,6 +19,9 @@ export default function HostnameInput (props: {
   const dispatch = useDispatch()
   const environments = useSelector(
     (state: RootState) => state.environmentSlice.environments
+  )
+  const hostnames = useSelector(
+    (state: RootState) => state.hostnameSlice.hostnames
   )
 
   const { register, handleSubmit, formState, control } = useForm<Hostname>({
@@ -44,6 +49,8 @@ export default function HostnameInput (props: {
   const options = environments.map(e => {
     return { label: e.name, value: e.name }
   })
+
+  const groups = _.uniqBy(_.flatMap(hostnames.map(h => h.groups)), g => g.label)
 
   return (
     <Stack padding='20px' spacing={3}>
@@ -99,13 +106,14 @@ export default function HostnameInput (props: {
             control={control}
             render={({ field: { onChange, value } }) => (
               <MultiSelect
-                options={options}
+                options={groups}
                 value={value ? value : []}
                 onChange={onChange}
                 labelledBy='Select'
                 disableSearch
                 placeholder='Groups'
                 hasSelectAll={false}
+                create
               />
             )}
             name='groups'
