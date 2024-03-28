@@ -1,0 +1,30 @@
+{
+  "name": "network-planner",
+  "version": "0.0.1",
+  "description": "Network planner with Graphics backend",
+  "scripts": {
+    "lint": "elint --project tsconfig.json --type-check",
+    "watch": "parcel serve index.html",
+    "build": "parcel build index.html",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/mariusmu/network-planner"
+  },
+  "keywords": [
+    "network",
+    "planner"
+  ],
+  "author": "Marius Munthe-Kaas",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "20.11.30",
+    "next-auth": "4.24.7",
+    "express": "4.19.2"
+
+  },
+  "dependencies": {
+    
+  }
+}

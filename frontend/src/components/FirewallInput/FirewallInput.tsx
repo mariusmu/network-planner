@@ -110,7 +110,17 @@ export default function FirewallInput (props: {
                         {error && error.message}
                       </FormErrorMessage>
                     </Stack>
-
+                    <Stack marginBottom='20px'>
+                      <Text size='sm' mb='8px'>
+                        Source FQDN
+                      </Text>
+                      <Input
+                        size='sm'
+                        onChange={() => {}}
+                        disabled={true}
+                        value={selectedHostname?.hostname ?? ''}
+                      />
+                    </Stack>
                     <Stack marginBottom='20px'>
                       <Text size='sm' mb='8px'>
                         Source CIDR
@@ -150,7 +160,7 @@ export default function FirewallInput (props: {
                 return (
                   <>
                     <Stack marginBottom='20px'>
-                      <Text mb='8px'>Destination FQDN</Text>
+                      <Text mb='8px'>Destination name</Text>
                       <Select
                         size='sm'
                         options={hostnamesAsInput}
@@ -164,7 +174,16 @@ export default function FirewallInput (props: {
                         {error && error.message}
                       </FormErrorMessage>
                     </Stack>
+                    <Stack marginBottom='20px'>
+                      <Text mb='8px'>Destination FQDN</Text>
 
+                      <Input
+                        size='sm'
+                        onChange={() => {}}
+                        disabled={true}
+                        value={selectedHostname?.hostname ?? ''}
+                      />
+                    </Stack>
                     <Stack marginBottom='20px'>
                       <Text mb='8px'>Destination CIDR</Text>
 

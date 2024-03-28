@@ -50,6 +50,10 @@ export default function HostnameTable () {
     list.filter(l => l.environment.id === selectedEnvironment?.id ?? -1)
   )
 
+  if (selectedEnvironment === undefined && environments.length > 0) {
+    setSelectedEnvironment(environments[0])
+  }
+
   function removeItem (id: string) {
     dispatch(remove(id))
   }

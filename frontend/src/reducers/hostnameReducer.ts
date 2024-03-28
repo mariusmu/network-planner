@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { Hostname, HostnameList } from '../models/hostname'
+import { Hostname } from '../models/hostname'
 
 export interface HostnameList {
   hostnames: Hostname[]
 }
 
 const initialState: HostnameList = {
-  hostnames: HostnameList
+  hostnames: []
 }
 
 export const hostnameSlice = createSlice({

@@ -26,6 +26,7 @@ export default function HostnameInput (props: {
 
   const { register, handleSubmit, formState, control } = useForm<Hostname>({
     defaultValues: {
+      name: props.entityToEdit?.name ?? '',
       description: props.entityToEdit?.description ?? '',
       environment: props.entityToEdit?.environment ?? '',
       groups: props.entityToEdit?.groups ?? [],
@@ -36,6 +37,7 @@ export default function HostnameInput (props: {
 
   function submit (values) {
     const item: Hostname = {
+      name: values.name,
       hostname: values.hostname,
       description: values.description,
       environment: values.environment,
@@ -56,13 +58,26 @@ export default function HostnameInput (props: {
     <Stack padding='20px' spacing={3}>
       <form onSubmit={handleSubmit(submit)}>
         <FormControl
+          isInvalid={formState.errors.name !== undefined}
+          paddingBottom='10px'
+        >
+          <Input
+            padding='20px'
+            placeholder='Describing name'
+            {...register('name', { required: true, minLength: 4 })}
+          />
+          <FormErrorMessage>
+            {formState.errors.name && formState.errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl
           isInvalid={formState.errors.hostname !== undefined}
           paddingBottom='10px'
         >
           <Input
             padding='20px'
             placeholder='Valid hostname'
-            {...register('hostname', { required: true, minLength: 4 })}
+            {...register('hostname', { required: false, minLength: 4 })}
           />
           <FormErrorMessage>
             {formState.errors.hostname && formState.errors.hostname.message}

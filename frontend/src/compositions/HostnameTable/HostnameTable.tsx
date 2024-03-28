@@ -46,7 +46,7 @@ export default function HostnameTable () {
   }
   return (
     <>
-      <Container maxW='1300px'>
+      <Container maxW='1700px'>
         <NetTable
           data={mapped}
           removeAction={removeItem}

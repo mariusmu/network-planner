@@ -9,7 +9,7 @@ export function mapHostnameToInput (input?: Hostname): Option {
     }
   }
   return {
-    label: input.hostname,
+    label: input.name,
     value: input.id
   }
 }

@@ -6,9 +6,8 @@ import { FirewallEntry } from '../reducers/firewallReducer'
 
 export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
   const gridHeader: GridHeader[] = [
-    {
-      name: 'Hostname'
-    },
+    { name: 'Name' },
+    { name: 'Hostname' },
     { name: 'IP address' },
     { name: 'Environment' },
     { name: 'Groups' },
@@ -19,6 +18,7 @@ export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
     return {
       id: h.id,
       items: [
+        { field: 'name', value: h.name },
         { field: 'hostname', value: h.hostname },
         { field: 'ipAddress', value: h.ipAddress },
         {
