@@ -11,43 +11,38 @@ import {
   MenuItem,
   MenuList,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
 
-import {
-  faChevronDown,
-  faCircleChevronDown
-} from '@fortawesome/free-solid-svg-icons'
+import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 import NetTable from '../../components/NetTable/NetTable'
 import FirewallInput from '../../components/FirewallInput/FirewallInput'
-import { mapFirewallEntryToGrid, mapPortsToGrid } from '../../helpers/mapToGrid'
-import { RootState } from '../../index'
-import { FirewallEntry, remove } from '../../reducers/firewallReducer'
+import { mapFirewallEntryToGrid } from '../../helpers/mapToGrid'
+import { AppDispatch, RootState } from '../../index'
+import { remove } from '../../reducers/firewallReducer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Environment } from '../../reducers/environmentReducer'
+import { Environment } from '../../../../shared/models/environment'
+import { FirewallEntry } from '../../../../shared/models/firewallEntry'
+import { deleteEntity } from '../../reducers/commonReducers'
 
 export default function HostnameTable () {
-  const list = useSelector(
-    (state: RootState) => state.firewallSlice.firewallEntries
-  )
-  const environments = useSelector(
-    (state: RootState) => state.environmentSlice.environments
-  )
-
-  const dispatch = useDispatch()
+  const list = useSelector((state: RootState) => state.firewallSlice)
+  const selector = useSelector((state: RootState) => state.environmentSlice)
+  const environments = selector.entity
+  const dispatch = useDispatch<AppDispatch>()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [toEdit, setToEdit] = useState<FirewallEntry>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>()
+  const toast = useToast()
   const mapped = mapFirewallEntryToGrid(
-    list.filter(l => l.environment.id === selectedEnvironment?.id ?? -1)
+    list.entity.filter(l => l.environment.id === selectedEnvironment?.id ?? -1)
   )
 
   if (selectedEnvironment === undefined && environments.length > 0) {
@@ -55,11 +50,20 @@ export default function HostnameTable () {
   }
 
   function removeItem (id: string) {
-    dispatch(remove(id))
+    deleteEntity('firewallEntry', id)
+      .then(() => dispatch(remove(id)))
+      .catch(err => {
+        toast({
+          title: 'Error deleting firewall entry',
+          status: 'error',
+          duration: 6000,
+          isClosable: true
+        })
+      })
   }
 
   function editAction (id: string, copy: boolean) {
-    const found = list.filter(s => s.id === id)
+    const found = list.entity.filter(s => s.id === id)
     if (found.length > 0) {
       let toEdit = found[0]
       if (copy) {
@@ -70,6 +74,7 @@ export default function HostnameTable () {
       onOpen()
     }
   }
+
   return (
     <Container maxW='1300px'>
       <Menu>

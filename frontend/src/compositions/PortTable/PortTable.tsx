@@ -7,7 +7,6 @@ import {
   Box,
   Button,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
@@ -19,12 +18,13 @@ import NetTable from '../../components/NetTable/NetTable'
 import PortInput from '../../components/PortInput/PortInput'
 import { mapPortsToGrid } from '../../helpers/mapToGrid'
 import { RootState } from '../../index'
-import { Port, remove } from '../../reducers/portReducer'
+import { remove } from '../../reducers/portReducer'
+import { Port } from '../../../../shared/models/port'
 
 export default function HostnameTable () {
-  const list = useSelector((state: RootState) => state.portSlice.ports)
+  const selector = useSelector((state: RootState) => state.portSlice)
   const dispatch = useDispatch()
-  const mapped = mapPortsToGrid(list)
+  const mapped = mapPortsToGrid(selector.entity)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [toEdit, setToEdit] = useState<Port>()
   function removeItem (id: string) {
@@ -32,7 +32,7 @@ export default function HostnameTable () {
   }
 
   function editAction (id: string, copy: boolean) {
-    const found = list.filter(s => s.id === id)
+    const found = selector.filter(s => s.id === id)
     if (found.length > 0) {
       let toEdit = found[0]
       if (copy) {

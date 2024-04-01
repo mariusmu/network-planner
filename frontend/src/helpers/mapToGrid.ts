@@ -1,8 +1,8 @@
 import { GridEntry, GridHeader, GridRow } from '../components/NetTable/NetTable'
-import { Hostname } from '../models/hostname'
-import { Environment } from '../reducers/environmentReducer'
-import { Port } from '../reducers/portReducer'
-import { FirewallEntry } from '../reducers/firewallReducer'
+import { Hostname } from '../../../shared/models/hostName'
+import { Environment } from '../../../shared/models/environment'
+import { FirewallEntry } from '../../../shared/models/firewallEntry'
+import { Port } from '../../../shared/models/port'
 
 export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
   const gridHeader: GridHeader[] = [
@@ -23,12 +23,12 @@ export function mapHostnameToGrid (hostnames: Hostname[]): GridEntry {
         { field: 'ipAddress', value: h.ipAddress },
         {
           field: 'environment',
-          value: h.environment.map(e => e.value).join(', '),
+          value: h.environment?.map(e => e.name).join(', ') ?? '',
           multitem: true
         },
         {
           field: 'groups',
-          value: h.groups.map(g => g.value).join(', '),
+          value: h.groups?.map(g => g.value).join(', ') ?? '',
           multitem: true
         },
         { field: 'description', value: h.description }
@@ -140,7 +140,7 @@ export function mapFirewallEntryToGrid (entries?: FirewallEntry[]): GridEntry {
           },
           {
             field: 'destinationPort',
-            value: h.destinationPorts.join(', '),
+            value: h.destinationPorts?.join(', ') ?? '',
             multitem: true
           },
           { field: 'description', value: h.description }

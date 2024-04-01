@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { MultiSelect } from 'chakra-multiselect'
 import shortUUID from 'short-uuid'
-import { Port, add } from '../../reducers/portReducer'
+import { add } from '../../reducers/portReducer'
+import { Port } from '../../../../shared/models/port'
 import { RootState } from '../..'
 import { Option } from 'react-multi-select-component'
 import * as _ from 'lodash'
@@ -21,7 +22,8 @@ export default function PortInput (props: {
   closeAction: () => void
 }) {
   const dispatch = useDispatch()
-  const ports: Port[] = useSelector((state: RootState) => state.portSlice.ports)
+  const slice = useSelector((state: RootState) => state.portSlice)
+  const ports = slice.entity
   const groups: Option[] = _.uniq(
     ports.flatMap(p => p.groups).map(f => f.value)
   ).map(a => {

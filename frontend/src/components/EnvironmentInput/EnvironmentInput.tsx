@@ -11,13 +11,15 @@ import { useDispatch } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { MultiSelect } from 'chakra-multiselect'
 import shortUUID from 'short-uuid'
-import { Environment, add } from '../../reducers/environmentReducer'
+import { add } from '../../reducers/environmentReducer'
+import { Environment } from '../../../../shared/models/environment'
+import { saveEntity } from '../../reducers/commonReducers'
 
 export default function EnvironmentInput (props: {
   entityToEdit: Environment
   closeAction: () => void
 }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch() as any
   const { register, handleSubmit, formState, control } = useForm<Environment>({
     defaultValues: {
       description: props.entityToEdit?.description ?? '',
@@ -31,7 +33,9 @@ export default function EnvironmentInput (props: {
       description: values.description,
       id: props.entityToEdit?.id ?? shortUUID().generate()
     }
+    saveEntity('environment', item)
     dispatch(add(item))
+
     props.closeAction()
   }
   return (

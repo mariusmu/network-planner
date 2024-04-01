@@ -1,33 +1,19 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "moduleResolution": "node",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "target": "ES2020",
         "jsx": "react",
-        "alwaysStrict": true,
+        "allowImportingTsExtensions": true,
         "strictNullChecks": true,
-        "noImplicitAny": false,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
+        "strictFunctionTypes": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "sourceMap": true,
-        "outDir": "dist",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true
-        
+        "types": ["node"]
     },
-    "files": [
-        "src/index.tsx" 
-    ],
-    "include": [
-        "app/**/*.ts",
-        "app/**/*.tsx",
-        "test/**/*.ts",
-        "test/**/*.tsx",
-        "node_modules/@types/**/*.d.ts"
-, "setupTests.ts"    ],
     "exclude": [
-        "dist"
+        "node_modules",
+ 
+        "**/node_modules/*"
     ]
 }

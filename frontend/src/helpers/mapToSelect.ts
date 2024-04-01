@@ -1,5 +1,5 @@
 import { Option } from 'react-multi-select-component'
-import { Hostname } from '../models/hostname'
+import { Hostname } from '../../../shared/models/hostname'
 
 export function mapHostnameToInput (input?: Hostname): Option {
   if (input === undefined) {

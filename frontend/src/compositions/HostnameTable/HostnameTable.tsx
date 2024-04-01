@@ -9,30 +9,41 @@ import { Container } from '@chakra-ui/layout'
 import HostnameInput from '../../components/HostnameInput/HostnameInput'
 import {
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
   Box,
-  Button
+  Button,
+  useToast
 } from '@chakra-ui/react'
-import { Hostname } from '../../models/hostname'
+import { Hostname } from '../../../../shared/models/hostName'
 import shortUUID from 'short-uuid'
+import { deleteEntity } from '../../reducers/commonReducers'
 
 export default function HostnameTable () {
-  const list = useSelector((state: RootState) => state.hostnameSlice.hostnames)
+  const selector = useSelector((state: RootState) => state.hostnameSlice)
   const dispatch = useDispatch()
-  const mapped = mapHostnameToGrid(list)
+  const mapped = mapHostnameToGrid(selector.entity)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [toEdit, setToEdit] = useState<Hostname>()
+  const toast = useToast()
   function removeItem (id: string) {
-    dispatch(remove(id))
+    deleteEntity('hostname', id)
+      .then(() => dispatch(remove(id)))
+      .catch(err => {
+        toast({
+          title: 'Error deleting hostname',
+          status: 'error',
+          duration: 6000,
+          isClosable: true
+        })
+      })
   }
 
   function editAction (id: string, copy: boolean) {
-    const found = list.filter(s => s.id === id)
+    const found = selector.entity.filter(s => s.id === id)
     if (found.length > 0) {
       let toEdit = found[0]
       if (copy) {

@@ -8,7 +8,8 @@ import {
   FormErrorMessage,
   Input,
   Spacer,
-  Text
+  Text,
+  useToast
 } from '@chakra-ui/react'
 import React from 'react'
 import { Select } from 'chakra-react-select'
@@ -16,15 +17,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { RootState } from '../..'
 import * as _ from 'lodash'
-import { FirewallEntry, add } from '../../reducers/firewallReducer'
+import { add } from '../../reducers/firewallReducer'
 import {
   mapHostnamesToSelect,
   mapHostnameToInput
 } from '../../helpers/mapToSelect'
-import { Hostname } from '../../models/hostname'
+import { Hostname } from '../../../../shared/models/hostName'
 import { MultiSelect } from 'chakra-multiselect'
 import shortUUID from 'short-uuid'
-import { Environment } from '../../reducers/environmentReducer'
+import { Environment } from '../../../../shared/models/environment'
+import { FirewallEntry } from '../../../../shared/models/firewallEntry'
+import { saveEntity } from '../../reducers/commonReducers'
 
 export default function FirewallInput (props: {
   entityToEdit?: FirewallEntry
@@ -32,11 +35,13 @@ export default function FirewallInput (props: {
   environment: Environment
 }) {
   const dispatch = useDispatch()
+  const toast = useToast()
+
   const hostnames: Hostname[] = useSelector(
-    (state: RootState) => state.hostnameSlice.hostnames
+    (state: RootState) => state.hostnameSlice.entity
   )
   const environments: Environment[] = useSelector(
-    (state: RootState) => state.environmentSlice.environments
+    (state: RootState) => state.environmentSlice.entity
   )
 
   const { register, handleSubmit, formState, control } = useForm<FirewallEntry>(
@@ -70,7 +75,17 @@ export default function FirewallInput (props: {
       environment: props.environment,
       destinationPorts: ports
     }
-    dispatch(add(item))
+    saveEntity('firewallEntry', item)
+      .then(() => dispatch(add(item)))
+      .catch(err =>
+        toast({
+          title: 'Error editing firewall entry',
+          status: 'error',
+          duration: 6000,
+          isClosable: true
+        })
+      )
+
     props.closeAction()
   }
   const hostnamesAsInput = mapHostnamesToSelect(hostnames)

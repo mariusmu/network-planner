@@ -9,8 +9,19 @@ import { Stack } from '@chakra-ui/layout'
 import { Button, FormControl, FormErrorMessage } from '@chakra-ui/react'
 import * as _ from 'lodash'
 import { RootState } from '../..'
-import { Hostname } from '../../models/hostname'
+import { Hostname } from '../../../../shared/models/hostName'
 import { add } from '../../reducers/hostnameReducer'
+import { saveEntity } from '../../reducers/commonReducers'
+import { Option } from 'react-multi-select-component'
+
+export interface HostnameInput {
+  name: string
+  description: string
+  environment: Option[]
+  groups: Option[]
+  hostname: string
+  ipAddress: string
+}
 
 export default function HostnameInput (props: {
   entityToEdit: Hostname
@@ -18,38 +29,47 @@ export default function HostnameInput (props: {
 }) {
   const dispatch = useDispatch()
   const environments = useSelector(
-    (state: RootState) => state.environmentSlice.environments
+    (state: RootState) => state.environmentSlice.entity
   )
   const hostnames = useSelector(
-    (state: RootState) => state.hostnameSlice.hostnames
+    (state: RootState) => state.hostnameSlice.entity
   )
 
-  const { register, handleSubmit, formState, control } = useForm<Hostname>({
-    defaultValues: {
-      name: props.entityToEdit?.name ?? '',
-      description: props.entityToEdit?.description ?? '',
-      environment: props.entityToEdit?.environment ?? '',
-      groups: props.entityToEdit?.groups ?? [],
-      hostname: props.entityToEdit?.hostname ?? '',
-      ipAddress: props.entityToEdit?.ipAddress ?? ''
+  const { register, handleSubmit, formState, control } = useForm<HostnameInput>(
+    {
+      defaultValues: {
+        name: props.entityToEdit?.name ?? '',
+        description: props.entityToEdit?.description ?? '',
+        environment:
+          props.entityToEdit?.environment.map(e => {
+            return { key: e.id, name: e.name, value: e.name }
+          }) ?? '',
+        groups: props.entityToEdit?.groups ?? [],
+        hostname: props.entityToEdit?.hostname ?? '',
+        ipAddress: props.entityToEdit?.ipAddress ?? ''
+      }
     }
-  })
+  )
 
   function submit (values) {
+    const environment = values.environment ?? []
     const item: Hostname = {
       name: values.name,
       hostname: values.hostname,
       description: values.description,
-      environment: values.environment,
+      environment: environments.filter(
+        e => environment?.map(e => e.key).indexOf(e.id) > -1
+      ),
       groups: values.groups,
       id: props.entityToEdit?.id ?? shortUUID().generate(),
       ipAddress: values.ipAddress
     }
+    saveEntity('hostname', item)
     dispatch(add(item))
     props.closeAction()
   }
-  const options = environments.map(e => {
-    return { label: e.name, value: e.name }
+  const options: Option[] = environments.map(e => {
+    return { label: e.name, value: e.name, key: e.id }
   })
 
   const groups = _.uniqBy(_.flatMap(hostnames.map(h => h.groups)), g => g.label)

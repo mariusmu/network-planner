@@ -15,10 +15,15 @@ import environmentSlice from './reducers/environmentReducer'
 import hostnameSlice from './reducers/hostnameReducer'
 import portSlice from './reducers/portReducer'
 import firewallSlice from './reducers/firewallReducer'
+const useData = true
 
-let persistedStore = localStorage.getItem('store')
-if (persistedStore !== null) {
-  persistedStore = JSON.parse(persistedStore)
+let persistedStore: any
+
+if (!useData) {
+  persistedStore = localStorage.getItem('store')
+  if (persistedStore !== null) {
+    persistedStore = JSON.parse(persistedStore)
+  }
 }
 
 export const store = configureStore({
@@ -31,9 +36,11 @@ export const store = configureStore({
   preloadedState: persistedStore ?? {}
 })
 
-store.subscribe(() => [
-  localStorage.setItem('store', JSON.stringify(store.getState()))
-])
+store.subscribe(() => {
+  if (!useData) {
+    localStorage.setItem('store', JSON.stringify(store.getState()))
+  }
+})
 
 const theme = extendTheme({
   components: {

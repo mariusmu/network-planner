@@ -18,22 +18,23 @@ import EnvironmentInput from '../../components/EnvironmentInput/EnvironmentInput
 import NetTable from '../../components/NetTable/NetTable'
 import { mapEnvironmentsToGrid } from '../../helpers/mapToGrid'
 import { RootState } from '../../index'
-import { Environment, remove } from '../../reducers/environmentReducer'
+import { remove } from '../../reducers/environmentReducer'
+import { Environment } from '../../../../shared/models/environment'
+import { deleteEntity } from '../../reducers/commonReducers'
 
 export default function EnvironmentTable () {
-  const list = useSelector(
-    (state: RootState) => state.environmentSlice.environments
-  )
+  const selector = useSelector((state: RootState) => state.environmentSlice)
   const dispatch = useDispatch()
-  const mapped = mapEnvironmentsToGrid(list)
+  const mapped = mapEnvironmentsToGrid(selector.entity)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [toEdit, setToEdit] = useState<Environment>()
   function removeItem (id: string) {
+    deleteEntity('environment', id)
     dispatch(remove(id))
   }
 
   function editAction (id: string, copy: boolean) {
-    const found = list.filter(s => s.id === id)
+    const found = selector.entity.filter(s => s.id === id)
     if (found.length > 0) {
       let toEdit = found[0]
       if (copy) {
